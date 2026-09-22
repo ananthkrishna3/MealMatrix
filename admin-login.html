@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <title>Admin Login</title>
+</head>
+<body>
+    <h1 style="text-align:center" >Admin Login</h1>
+    <hr />
+    <form name ="adminLoginForm"  onsubmit="return loginAdmin()" >
+            <label for="adminUserName">Username:</label><br>
+            <input type="text" id="adminUserName" name="adminUserName" required><br><br>
+            <label for="adminPassword">Password:</label><br>
+            <input type="password" id="adminPassword" name="adminPassword" required><br><br>
+            <input type="submit" value="Login Admin" ><br><br>
+    </form>
+    <script type =text/javascript>
+        function loginAdmin() {
+            let username = document.getElementById("adminUserName").value;
+            let password = document.getElementById("adminPassword").value;
+            if(username === "admin" && password === "admin123") {
+                alert("Admin login successful!");
+                window.location.href = "admin-dashboard.html"; // Redirect to admin dashboard
+            } else {
+                alert("Invalid username or password. Please try again.");
+            }
+            return false; // Prevent form submission for demonstration purposes
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+body {
+    margin: 0px;
+    font-family: Arial;
+}
+.mainSection{
+    background-color: #d3c611;
+    text-align: center;
+    font-size: 20px;
+    padding: 35px;
+}
+
+.loginOptions{
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+}
+.customerAction  {
+    display: block;
+    
+}

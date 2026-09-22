@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <title>MealMatrix - Customer Login.</title>
+</head>
+<body>
+    <h1 style="text-align:center" >Customer Login</h1>
+    <hr />
+    <form name ="customerLoginForm"  onsubmit="return loginCustomer()" >
+            <label for="custEmail">Email:</label><br>
+            <input type="email" id="custEmail" name="custEmail" required><br><br>
+            <label for="custPassword">Password:</label><br>
+            <input type="password" id="custPassword" name="custPassword" required><br><br>
+            <input type="submit" value="Login Customer" ><br><br>
+            <a href='registration.html' class='customerAction newCustomerButton'>New Customer? Register</a>
+    </form>
+
+    <script type="text/javascript">
+        function loginCustomer() {
+            let email = document.getElementById("custEmail").value;
+            let password = document.getElementById("custPassword").value;
+
+            fetch("http://localhost:3000/customers")
+                .then(response => response.json())
+                .then(data =>{ let customer = data.find(customer => customer.email === email && customer.password === password)
+                    if (customer) {
+                        alert("Login successful!");
+                        console.log("Customer ID:", customer.cid);
+                        window.location.href = "menu.html?cid=" + customer.cid; // Redirect to customer dashboard with cid as a query parameter
+                    } else {
+                        alert("Invalid email or password. Please try again.");
+                    }
+                })
+                .catch(error => console.log("Error:", error));
+
+            return false; // Prevent form submission for demonstration purposes
+        }
+    </script>
+</body>
+</html>

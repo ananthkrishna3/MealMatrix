@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title>Page Title</title>
+</head>
+<body onload="displayMenu()">
+    <h1>MealMatrix - Menu</h1>
+    <p>Welcome to the menu!</p>
+
+    <table width="100%" border="1"  >
+         <thead>
+        <tr>
+            <th>Food ID</th>
+            <th>Food Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+        </tr>
+    </thead>
+    <tbody id="menuItems">
+        <!-- Menu items will be dynamically inserted here -->
+    </tbody>
+    </table>
+    <button type="button" onclick="proceedToOrder()">
+        Proceed to Order
+    </button>
+    
+
+<script type="text/javascript">
+    let foodItems = [];
+    function displayMenu() {
+        // Get the query parameter from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const cid = urlParams.get('cid');
+
+        
+
+         fetch("http://localhost:3000/foodItems")
+                .then(response => response.json())
+                .then(data => {
+                    foodItems = data;
+                    displayMenuItem(data);
+                })
+                .catch(error => console.log("Error:", error));
+            }
+
+    function displayMenuItem(menuItems) {
+        let rows = "";
+
+        if (menuItems.length === 0) {
+
+        rows = "<tr>";
+        rows += "<td colspan='4'>No food items available</td>";
+        rows += "</tr>";
+
+    } else {
+
+        menuItems.forEach(food => {
+            rows += "<tr>";
+            rows += "<td>" + food.fid + "</td>";
+            rows += "<td>" + food.foodName + "</td>";
+            rows += "<td>₹" + food.price + "</td>";
+            rows += "<td>";
+            rows += "<button type='button' id='minus' onclick='changeQuantity(" + food.fid + ", -1)'>-</button>";
+            rows += " <span id='quantity-" + food.fid + "'>0</span> ";
+            rows += "<button type='button' id='plus' onclick='changeQuantity(" + food.fid + ", 1)'>+</button>";
+            rows += "</td>";
+            rows += "</tr>";
+        });
+    }
+    document.getElementById("menuItems").innerHTML = rows;
+    }
+
+    function changeQuantity(foodId, quantityChange) {
+        var itemQuantity = parseInt(document.getElementById("quantity-" + foodId).innerText);
+        itemQuantity += quantityChange;
+        if (itemQuantity < 0) {
+            itemQuantity = 0;
+        }
+        
+        document.getElementById("quantity-" + foodId).innerText = itemQuantity;
+    }
+
+    function proceedToOrder(){
+        const urlParams = new URLSearchParams(window.location.search);
+        const cid = parseInt(urlParams.get('cid'));
+        console.log("Customer ID from URL:", cid);
+        
+        let totalPrice = 0;
+        let orderItems = [];
+        foodItems.forEach(food => {
+            var itemQuantity = parseInt(document.getElementById("quantity-" + food.fid).innerText);
+            if (itemQuantity > 0) {
+                let itemTotalPrice = 0;
+                itemTotalPrice = food.price * itemQuantity;
+                totalPrice += itemTotalPrice;
+                orderItems.push({
+                    fid: food.fid,
+                    foodName: food.foodName,
+                    price: food.price,
+                    quantity: itemQuantity,
+                    itemTotalPrice: itemTotalPrice
+                });
+            }
+        });
+
+        console.log("Total Price:", totalPrice);
+        console.log("Order Items:", orderItems);
+        console.log("orderItems length:", orderItems.length);
+        if (orderItems.length === 0) {
+            alert("Please select at least one item to proceed with the order.");
+            return;
+        }
+
+        fetch("http://localhost:3000/orders")
+        .then(response => response.json()).then(data => {
+            
+            let orderIds = data.map(order => order.orderid);
+            let orderid = 0;
+            if(orderIds.length == 0){
+                orderid = 101;
+            } else {
+                orderid = Math.max(...orderIds) + 1;
+            }
+            let orderData = { orderid: orderid, cid: cid, totalPrice: totalPrice, orderItems: orderItems, orderDate: new Date().toISOString() };
+            return orderData;
+        }).then(orderData =>{
+            fetch("http://localhost:3000/orders", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(orderData)
+        }).then(response => {
+            if (response.ok) {
+                alert("Order placed successfully!");
+            } else {
+                alert("Error placing order.");
+            }
+        });
+        })
+    }
+</script>    
+</body>
+</html>

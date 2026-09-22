@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <title>MealMatrix - Customer Registration.</title>
+</head>
+<body>
+    <h1 style="text-align:center" >Customer Registration</h1>
+    <hr />
+    <form name ="addCustomerForm"  onsubmit="return addCustomer()" >
+       
+            <label for="custName">Name:</label><br>
+            <input type="text" id="custName" name="custName" required><br><br>
+            <label for="custEmail">Email:</label><br>
+            <input type="email" id="custEmail" name="custEmail" required><br><br>
+            <label for="custPhone">Phone Number:</label><br>
+            <input type="tel" id="custPhone" name="custPhone" required><br><br>
+            <label for="custPassword">Password:</label><br>
+            <input type="password" id="custPassword" name="custPassword" required><br><br>
+            <input type="submit" value="Register Customer" >
+        </form>
+
+        <script type="text/javascript">
+            function addCustomer() {
+               let customerName = document.getElementById("custName").value;
+               let email = document.getElementById("custEmail").value;
+               let phone = document.getElementById("custPhone").value;
+               let password = document.getElementById("custPassword").value;
+               let cid = 0; 
+               let id = 0;
+               let custData;
+
+              let customerData =  fetch("http://localhost:3000/customers")
+            .then(response => response.json()).then(data => {
+                let customerIds = data.map(customer => customer.cid);
+                let id = data.map(customer => customer.id);
+                if(customerIds.length == 0 && id.length == 0){
+                    cid = 101;
+                    id = 101;
+                } else {
+                    cid = Math.max(...customerIds) + 1;
+                    id = Math.max(...id) + 1;
+                }
+                custData = { cid: cid, id: id, customerName: customerName, phone: phone, email: email, password: password };
+                return custData;
+            })
+            .then(custData => {
+                return fetch("http://localhost:3000/customers", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(custData)
+                }).then(response => {
+                    if (response.ok) {
+                        alert("Customer registered successfully!");
+                    } else {
+                        alert("Error registering customer.");
+                    }
+                });
+            })
+                return false; // Prevent form submission for demonstration purposes
+            }
+
+             console.log("Customer Data:", JSON.stringify(custData));
+        </script>
+</body>
+</html>

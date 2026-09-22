@@ -1,0 +1,231 @@
+{
+  "customers": [
+    {
+      "id": "1",
+      "cid": 101,
+      "customerName": "Anand Kumar",
+      "phone": "9876543210",
+      "email": "anand@example.com",
+      "password": "anand123"
+    },
+    {
+      "id": "2",
+      "cid": 102,
+      "customerName": "Priya Sharma",
+      "phone": "9876501234",
+      "email": "priya@example.com",
+      "password": "priya123"
+    }
+  ],
+  "foodItems": [
+    {
+      "id": "1",
+      "fid": 201,
+      "foodName": "Veg Burger",
+      "price": 120
+    },
+    {
+      "id": "2",
+      "fid": 202,
+      "foodName": "Paneer Pizza",
+      "price": 250
+    },
+    {
+      "id": "3",
+      "fid": 203,
+      "foodName": "Veg Biryani",
+      "price": 180
+    },
+    {
+      "id": "4",
+      "fid": 204,
+      "foodName": "French Fries",
+      "price": 100
+    },
+    {
+      "id": "5",
+      "fid": 205,
+      "foodName": "Masala Dosa",
+      "price": 90
+    },
+    {
+      "id": "6",
+      "fid": 206,
+      "foodName": "Idli Sambar",
+      "price": 70
+    },
+    {
+      "id": "7",
+      "fid": 207,
+      "foodName": "Veg Noodles",
+      "price": 140
+    },
+    {
+      "id": "8",
+      "fid": 208,
+      "foodName": "Paneer Butter Masala",
+      "price": 220
+    },
+    {
+      "id": "9",
+      "fid": 209,
+      "foodName": "Veg Fried Rice",
+      "price": 150
+    },
+    {
+      "id": "10",
+      "fid": 210,
+      "foodName": "Margherita Pizza",
+      "price": 230
+    },
+    {
+      "id": "11",
+      "fid": 211,
+      "foodName": "Pasta Alfredo",
+      "price": 190
+    },
+    {
+      "id": "12",
+      "fid": 212,
+      "foodName": "Veg Sandwich",
+      "price": 110
+    },
+    {
+      "id": "13",
+      "fid": 213,
+      "foodName": "Veg Manchurian",
+      "price": 160
+    },
+    {
+      "id": "14",
+      "fid": 214,
+      "foodName": "Chocolate Cake",
+      "price": 130
+    },
+    {
+      "id": "15",
+      "fid": 215,
+      "foodName": "Cold Coffee",
+      "price": 100
+    }
+  ],
+  "orders": [
+    {
+      "orderid": 101,
+      "cid": 102,
+      "totalPrice": 2760,
+      "orderItems": [
+        {
+          "fid": 201,
+          "foodName": "Veg Burger",
+          "price": 120,
+          "quantity": 2,
+          "itemTotalPrice": 240
+        },
+        {
+          "fid": 204,
+          "foodName": "French Fries",
+          "price": 100,
+          "quantity": 2,
+          "itemTotalPrice": 200
+        },
+        {
+          "fid": 208,
+          "foodName": "Paneer Butter Masala",
+          "price": 220,
+          "quantity": 2,
+          "itemTotalPrice": 440
+        },
+        {
+          "fid": 210,
+          "foodName": "Margherita Pizza",
+          "price": 230,
+          "quantity": 2,
+          "itemTotalPrice": 460
+        },
+        {
+          "fid": 212,
+          "foodName": "Veg Sandwich",
+          "price": 110,
+          "quantity": 4,
+          "itemTotalPrice": 440
+        },
+        {
+          "fid": 213,
+          "foodName": "Veg Manchurian",
+          "price": 160,
+          "quantity": 3,
+          "itemTotalPrice": 480
+        },
+        {
+          "fid": 215,
+          "foodName": "Cold Coffee",
+          "price": 100,
+          "quantity": 5,
+          "itemTotalPrice": 500
+        }
+      ],
+      "orderDate": "2026-09-22T17:54:53.475Z",
+      "id": "xDxWTd_No64"
+    },
+    {
+      "orderid": 102,
+      "cid": 102,
+      "totalPrice": 4130,
+      "orderItems": [
+        {
+          "fid": 201,
+          "foodName": "Veg Burger",
+          "price": 120,
+          "quantity": 2,
+          "itemTotalPrice": 240
+        },
+        {
+          "fid": 203,
+          "foodName": "Veg Biryani",
+          "price": 180,
+          "quantity": 2,
+          "itemTotalPrice": 360
+        },
+        {
+          "fid": 204,
+          "foodName": "French Fries",
+          "price": 100,
+          "quantity": 3,
+          "itemTotalPrice": 300
+        },
+        {
+          "fid": 205,
+          "foodName": "Masala Dosa",
+          "price": 90,
+          "quantity": 3,
+          "itemTotalPrice": 270
+        },
+        {
+          "fid": 207,
+          "foodName": "Veg Noodles",
+          "price": 140,
+          "quantity": 5,
+          "itemTotalPrice": 700
+        },
+        {
+          "fid": 208,
+          "foodName": "Paneer Butter Masala",
+          "price": 220,
+          "quantity": 4,
+          "itemTotalPrice": 880
+        },
+        {
+          "fid": 210,
+          "foodName": "Margherita Pizza",
+          "price": 230,
+          "quantity": 6,
+          "itemTotalPrice": 1380
+        }
+      ],
+      "orderDate": "2026-09-22T17:55:09.330Z",
+      "id": "uNmBiLvHZGU"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
