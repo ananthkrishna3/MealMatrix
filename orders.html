@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Orders</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body onload="displayOrders()">
+    <header class="site-header">
+    <div class="container">
+        <a href="index.html" class="site-brand">
+            <img src="images/MealMatrixLogo.png" alt="Meal Matrix Logo" class="site-logo" />
+            <span>Meal Matrix</span>
+        </a>
+    </div>
+    </header>
+    <main class="page-content">
+    <div class="page-inner">
+    <div class="container py-4">
+      <h1 class="text-center mb-4">View Orders</h1>
+      <button
+        type="button"
+        class="btn btn-secondary mb-3"
+        onclick="window.location.href = 'admin.html'"
+      >
+        Back to Admin
+      </button>
+      <div class="table-responsive">
+        <table
+          class="table table-bordered table-striped table-hover align-middle"
+        >
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer ID</th>
+              <th>Order Items</th>
+              <th>Total Price</th>
+              <th>Order Date</th>
+            </tr>
+          </thead>
+          <tbody id="orders"></tbody>
+        </table>
+      </div>
+    </div>
+    </div>
+    </main>
+    <script type="text/javascript">
+      function displayOrders() {
+        let rows = "";
+        fetch("http://localhost:3000/orders")
+          .then((response) => response.json())
+          .then((data) => {
+            data.forEach((order) => {
+              let formattedDate = new Date(order.orderDate).toLocaleString();
+              let items = order.orderItems
+                .map((item) => item.foodName + " x " + item.quantity)
+                .join(", ");
+
+              rows += "<tr>";
+              rows += "<td>" + order.orderid + "</td>";
+              rows += "<td>" + order.cid + "</td>";
+              rows += "<td>" + items + "</td>";
+              rows += "<td>₹" + order.totalPrice + "</td>";
+              rows += "<td>" + formattedDate + "</td>";
+              rows += "</tr>";
+            });
+            document.getElementById("orders").innerHTML = rows;
+          })
+          .catch((error) => console.log("Error:", error));
+      }
+    </script>
+    <footer class="site-footer">
+      <div class="container text-center">
+        <p class="mb-0">&copy; 2026 Meal Matrix. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>

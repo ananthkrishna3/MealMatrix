@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Menu Functionality</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body onload="displayMenu()">
+    <header class="site-header">
+    <div class="container">
+        <a href="index.html" class="site-brand">
+            <img src="images/MealMatrixLogo.png" alt="Meal Matrix Logo" class="site-logo" />
+            <span>Meal Matrix</span>
+        </a>
+    </div>
+    </header>
+    <div class="container py-4">
+        <div>
+            <h1 class="text-center mb-4">Admin Menu Functionality</h1>
+            <form name="adminMenuForm" onsubmit="return addFoodItem();">
+                <label for="foodName">Food Name:</label><br />
+                <input type="text" class="form-control" id="foodName" name="foodName" required /><br /><br />
+                <label for="price">Price:</label><br />
+                <input type="number" class="form-control" id="price" name="price" min="1" required /><br /><br />
+                <input type="submit" class="btn btn-success" value="Add Food Item" />
+            </form>
+            <br /><br />
+            <button type="button" class="btn btn-primary mb-4" onclick="window.location.href = 'orders.html'">
+                View Orders</button><br /><br />
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Food ID</th>
+                        <th>Food Name</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="menuItems">
+                    <!-- Menu items will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function displayMenu() {
+            fetch("http://localhost:3000/foodItems")
+                .then((response) => response.json())
+                .then((data) => {
+                    displayMenuItem(data);
+                })
+                .catch((error) => console.log("Error:", error));
+        }
+
+        function displayMenuItem(menuItems) {
+            let rows = "";
+
+            if (menuItems.length === 0) {
+                rows = "<tr>";
+                rows += "<td colspan='4'>No food items available</td>";
+                rows += "</tr>";
+            } else {
+                menuItems.forEach((food) => {
+                    rows += "<tr>";
+                    rows += "<td id='fid_" + food.fid + "'>" + food.fid + "</td>";
+                    rows +=
+                        "<td id='foodName_" + food.fid + "'>" + food.foodName + "</td>";
+                    rows += "<td id='price_" + food.fid + "'>₹" + food.price + "</td>";
+                    rows += "<td>";
+                    rows +=
+                        "<button type='button' class='btn btn-warning btn-sm' id='Update_" +
+                        food.fid +
+                        "' onclick=\"selectFoodForUpdate('" +
+                        food.id +
+                        "', " +
+                        food.fid +
+                        ')">Update</button>';
+                    rows +=
+                        "<button type='button' class='btn btn-danger btn-sm ms-2' id='Delete_" +
+                        food.fid +
+                        "' onclick=\"deleteFoodItem('" +
+                        food.id +
+                        "', " +
+                        food.fid +
+                        ')">Delete</button>';
+                    rows += "</td>";
+                    rows += "</tr>";
+                });
+            }
+            document.getElementById("menuItems").innerHTML = rows;
+        }
+
+        function addFoodItem() {
+            let foodName = document.getElementById("foodName").value;
+            let price = parseFloat(document.getElementById("price").value);
+            let fid = 0;
+
+            fetch("http://localhost:3000/foodItems")
+                .then((response) => response.json())
+                .then((data) => {
+                    let foodIds = data.map((food) => food.fid);
+                    if (foodIds.length == 0) {
+                        fid = 201;
+                    } else {
+                        fid = Math.max(...foodIds) + 1;
+                    }
+                    let newItem = { fid: fid, foodName: foodName, price: price };
+                    fetch("http://localhost:3000/foodItems", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(newItem),
+                    })
+                        .then((response) => {
+                            if (response.ok) {
+                                alert("Food item added successfully!");
+                                displayMenu(); // Refresh the menu after adding a new item
+                            } else {
+                                alert("Error adding food item.");
+                            }
+                        })
+                        .catch((error) => console.log("Error:", error));
+                });
+            return false; // Prevent default form submission
+        }
+
+        function selectFoodForUpdate(serverId, foodid) {
+            let foodNameCell = document.getElementById("foodName_" + foodid);
+            let priceCell = document.getElementById("price_" + foodid);
+
+            let foodName = foodNameCell.innerText;
+            let price = parseFloat(priceCell.innerText.replace("₹", ""));
+            let updateButton = document.getElementById("Update_" + foodid);
+
+            foodNameCell.innerHTML =
+                "<input type='text' class='form-control form-control-sm'  id='editFoodName_" +
+                foodid +
+                "' value='" +
+                foodName +
+                "'>";
+
+            priceCell.innerHTML =
+                "<input type='number' lass='form-control form-control-sm' min='1' id='editPrice_" +
+                foodid +
+                "' value='" +
+                price +
+                "'>";
+
+            updateButton.innerHTML = "Save";
+            updateButton.onclick = function () {
+                let updatedFoodName = document.getElementById(
+                    "editFoodName_" + foodid,
+                ).value;
+                let updatedPrice = parseFloat(
+                    document.getElementById("editPrice_" + foodid).value,
+                );
+
+                let updatedItem = {
+                    fid: foodid,
+                    foodName: updatedFoodName,
+                    price: updatedPrice,
+                };
+
+                fetch("http://localhost:3000/foodItems/" + serverId, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(updatedItem),
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            alert("Food item updated successfully!");
+                            displayMenu(); // Refresh the menu after updating the item
+                        } else {
+                            alert("Error updating food item.");
+                        }
+                    })
+                    .catch((error) => console.log("Error:", error));
+            };
+        }
+
+        function deleteFoodItem(serverId, foodid) {
+            let confirmDelete = confirm(
+                "Are you sure you want to delete Food ID " + foodid + "?",
+            );
+
+            if (!confirmDelete) {
+                return;
+            }
+
+            fetch("http://localhost:3000/foodItems/" + serverId, {
+                method: "DELETE",
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        alert("Food item deleted successfully!");
+                        displayMenu();
+                    } else {
+                        alert("Error deleting food item.");
+                    }
+                })
+                .catch((error) => console.log("Error:", error));
+        }
+    </script>
+    <footer class="site-footer">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2026 Meal Matrix. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

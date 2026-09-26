@@ -1,40 +1,87 @@
-<!DOCTYPE html>
-<html lang='en'>
-<head>
-    <title>MealMatrix - Customer Login.</title>
-</head>
-<body>
-    <h1 style="text-align:center" >Customer Login</h1>
-    <hr />
-    <form name ="customerLoginForm"  onsubmit="return loginCustomer()" >
-            <label for="custEmail">Email:</label><br>
-            <input type="email" id="custEmail" name="custEmail" required><br><br>
-            <label for="custPassword">Password:</label><br>
-            <input type="password" id="custPassword" name="custPassword" required><br><br>
-            <input type="submit" value="Login Customer" ><br><br>
-            <a href='registration.html' class='customerAction newCustomerButton'>New Customer? Register</a>
-    </form>
+<!doctype html>
+<html lang="en">
 
+<head>
+    <title>MealMatrix - Customer Login</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+    <header class="site-header">
+    <div class="container">
+        <a href="index.html" class="site-brand">
+            <img src="images/MealMatrixLogo.png" alt="Meal Matrix Logo" class="site-logo" />
+            <span>Meal Matrix</span>
+        </a>
+    </div>
+    </header>
+    <main class="page-content">
+    <div class="page-inner">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <h1 class="text-center mb-4">Customer Login</h1>
+                        <form name="customerLoginForm" onsubmit="return loginCustomer();">
+                            <div class="mb-3">
+                                <label for="custEmail" class="form-label">Email:</label>
+                                <input type="email" class="form-control" id="custEmail" name="custEmail" required />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="custPassword" class="form-label">Password:</label>
+                                <input type="password" class="form-control" id="custPassword" name="custPassword"
+                                    required />
+                            </div>
+
+                            <input type="submit" class="btn btn-primary w-100" value="Login Customer" />
+
+                            <a href="registration.html"
+                                class="btn btn-link w-100 mt-2 customerAction newCustomerButton">
+                                New Customer? Register
+                            </a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </main>
     <script type="text/javascript">
         function loginCustomer() {
             let email = document.getElementById("custEmail").value;
             let password = document.getElementById("custPassword").value;
 
             fetch("http://localhost:3000/customers")
-                .then(response => response.json())
-                .then(data =>{ let customer = data.find(customer => customer.email === email && customer.password === password)
+                .then((response) => response.json())
+                .then((data) => {
+                    let customer = data.find(
+                        (customer) =>
+                            customer.email === email && customer.password === password,
+                    );
                     if (customer) {
                         alert("Login successful!");
-                        console.log("Customer ID:", customer.cid);
-                        window.location.href = "menu.html?cid=" + customer.cid; // Redirect to customer dashboard with cid as a query parameter
+                        window.location.href = "menu.html?cid=" + customer.cid;
                     } else {
                         alert("Invalid email or password. Please try again.");
                     }
                 })
-                .catch(error => console.log("Error:", error));
+                .catch((error) => console.log("Error:", error));
 
-            return false; // Prevent form submission for demonstration purposes
+            return false; // Prevent default form submission
         }
     </script>
+    <footer class="site-footer">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2026 Meal Matrix. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
+
 </html>
